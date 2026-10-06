@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import path from 'node:path';
+const root=path.resolve(import.meta.dirname,'..');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const escape=s=>s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+let content=read('docs/codelab-content.html').replace('<!-- PREPARATION -->',read('docs/codelab-preparation.html')).replace('{{SYSTEM_PROMPT}}',escape(read('n8n/Freight-System-Prompt.txt')));
+const html='<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Fakduai Port · Codelab</title><style>[hidden]{display:none!important}pre{white-space:pre-wrap;overflow-wrap:anywhere}table{width:100%;border-collapse:collapse}td,th{padding:12px;border-bottom:1px solid #ccd5e0;text-align:left}.step{padding:24px}.lesson-controls{display:flex;gap:12px;flex-wrap:wrap;margin:24px}button{cursor:pointer}</style></head><body>'+read('docs/codelab-shell.html')+content+'</main></div><div class="lesson-controls"><button id="prev">← ก่อนหน้า</button><button id="complete">ทำขั้นนี้แล้ว</button><button id="next">ถัดไป →</button></div></div><script src="codelab.js"></script></body></html>';
+fs.mkdirSync(path.join(root,'public/codelab'),{recursive:true});
+fs.writeFileSync(path.join(root,'public/codelab/index.html'),html);
+fs.mkdirSync(path.join(root,'public/downloads'),{recursive:true});
+fs.copyFileSync(path.join(root,'docs/Google-Sheet-Template.xlsx'),path.join(root,'public/downloads/Google-Sheet-Template.xlsx'));
+for(const [src,dest] of [['n8n/Fakduai-Freight-Full-Release.json','Fakduai-Port-LINE.json'],['n8n/Freight-System-Prompt.txt','Freight-System-Prompt.txt'],['google-apps-script/Code.gs','Code.gs'],...['SETUP','DATA-SCHEMA','TEST-PROMPTS','DEPLOY'].map(n=>['docs/'+n+'.md',n+'.md'])])fs.copyFileSync(path.join(root,src),path.join(root,'public/downloads',dest));
+console.log('Built LINE codelab and downloads');

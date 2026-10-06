@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Interactive international freight operations simulator for the Fakduai Lab workshop.">
+  <title>International Freight Operations Simulator</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230872df'/%3E%3Cpath d='M11 23c9-8 15 8 24 0s15 8 22 0M11 34c9-8 15 8 24 0s15 8 22 0M11 45c9-8 15 8 24 0s15 8 22 0' fill='none' stroke='white' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="International Freight home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span><strong>International Freight</strong><small>Operations Simulator</small></span>
+      </a>
+      <button class="topbar-center sync-control" id="sheet-refresh-btn" type="button" title="Refresh Google Sheet data">
+        <span class="sync-dot" id="sync-dot"></span><span id="sync-label">Demo data</span>
+      </button>
+      <div class="topbar-actions">
+        <select id="language-select" class="secondary-btn" aria-label="Language / ภาษา"><option value="th">ไทย</option><option value="en">English</option></select>
+        <button class="secondary-btn" id="sheet-auto-btn" type="button" disabled>Start Auto Sync</button>
+        <button class="secondary-btn" id="sheet-settings-btn" type="button">Google Sheet</button>
+        <button class="icon-btn" id="reset-btn" type="button" aria-label="Reset simulation" title="Reset simulation">↻</button>
+        <span class="avatar">FL</span>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <div><span class="eyebrow">OPERATIONS</span><h1>Shipments</h1></div>
+        <span class="count" id="shipment-count">6</span>
+      </div>
+      <label class="search-box"><span aria-hidden="true">⌕</span><input id="shipment-search" type="search" placeholder="Search shipment…" aria-label="Search shipments"></label>
+      <div class="filter-row" role="group" aria-label="Shipment filters">
+        <button class="filter active" data-filter="all" type="button">All</button>
+        <button class="filter" data-filter="action" type="button">Action</button>
+        <button class="filter" data-filter="delay" type="button">Delayed</button>
+      </div>
+      <div class="shipment-list" id="shipment-list" aria-live="polite"></div>
+      <div class="sidebar-footer">
+        <span><b id="metric-transit">3</b> In transit</span>
+        <span><b id="metric-action">2</b> Need action</span>
+        <span><b id="metric-delay">1</b> Delayed</span>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <section class="workspace-head">
+        <div>
+          <span class="eyebrow" id="selected-direction">IMPORT · SEA FCL</span>
+          <h2><span id="selected-id">IMP-003</span> <span class="status-pill hold" id="selected-status">CUSTOMS HOLD</span></h2>
+          <p><span id="selected-origin">Shanghai (SHA)</span><span class="route-arrow">→</span><span id="selected-destination">Laem Chabang (LCH)</span></p>
+        </div>
+        <div class="workspace-actions">
+          <div class="view-switch" role="group" aria-label="Simulation view">
+            <button class="active" data-view="terminal" type="button">Terminal</button>
+            <button data-view="network" type="button">Sea network</button>
+          </div>
+          <button class="secondary-btn" id="next-event-btn" type="button">Run next event</button>
+        </div>
+      </section>
+
+      <section class="visual-stage" aria-label="Freight simulation">
+        <canvas id="simulation-canvas" aria-label="Animated sea network and isometric container terminal"></canvas>
+        <div class="stage-overlay top-left"><span id="stage-title">SEA NETWORK</span><b id="stage-subtitle">6 active shipments</b></div>
+        <div class="stage-overlay top-right"><span>SIMULATION TIME</span><b id="simulation-time">16 OCT · 09:00</b></div>
+        <div class="map-legend" id="map-legend" hidden><span><i class="line active-line"></i>Selected route</span><span><i class="port-dot"></i>Port</span></div>
+        <div class="stage-tooltip" id="stage-tooltip" hidden></div>
+        <div class="terminal-controls" id="terminal-controls" aria-label="Terminal zoom"><button data-terminal-zoom="out" type="button" aria-label="Zoom out">−</button><span id="terminal-zoom-level">100%</span><button data-terminal-zoom="in" type="button" aria-label="Zoom in">+</button><button data-terminal-zoom="fit" type="button" aria-label="Fit terminal" title="Fit terminal">⛶</button></div>
+        <div class="operation-note" id="operation-note" role="status"></div>
+      </section>
+
+      <section class="process-card">
+        <div class="card-heading"><div><span class="eyebrow">PROCESS STATUS</span><h3>Shipment timeline</h3></div><span class="eta" id="selected-eta">ETA 18 OCT</span></div>
+        <div class="timeline" id="timeline"></div>
+      </section>
+    </main>
+
+    <aside class="details">
+      <nav class="inspector-tabs" aria-label="Shipment information"><button class="active" data-detail-tab="overview" aria-pressed="true" type="button">Overview</button><button data-detail-tab="documents" aria-pressed="false" type="button">Documents</button><button data-detail-tab="history" aria-pressed="false" type="button">History</button></nav>
+      <section class="detail-card shipment-card" data-detail-panel="overview">
+        <div class="card-heading"><div><span class="eyebrow">SELECTED SHIPMENT</span><h3>Operation details</h3></div><span class="live-label"><i></i>LIVE</span></div>
+        <div class="meta-grid">
+          <div><small>Container</small><strong id="selected-container">CAXU 10234</strong></div>
+          <div><small>Vessel</small><strong id="selected-vessel">MV Horizon</strong></div>
+          <div><small>Current location</small><strong id="selected-location">Customs Area</strong></div>
+          <div><small>Incoterm</small><strong id="selected-incoterm">CIF</strong></div>
+        </div>
+      </section>
+
+      <section class="detail-card document-card" data-detail-panel="documents" hidden>
+        <div class="card-heading"><div><span class="eyebrow">DOCUMENT CONTROL</span><h3>Release requirements</h3></div><span class="doc-progress" id="doc-progress">2/5 ready</span></div>
+        <div class="document-list" id="document-list"></div>
+        <div class="blocker" id="blocker-message" role="status"></div>
+        <button class="primary-btn" id="resolve-btn" type="button">Receive missing document</button>
+      </section>
+
+      <section class="detail-card event-card" data-detail-panel="history" hidden>
+        <div class="card-heading"><div><span class="eyebrow">EVENT → SYSTEM EFFECT</span><h3>Operation history</h3></div></div>
+        <div class="event-log" id="event-log" aria-live="polite"></div>
+      </section>
+    </aside>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="sheet-dialog" class="sheet-dialog">
+    <form id="sheet-form">
+      <div class="card-heading"><div><span class="eyebrow">WORKSHOP DATA</span><h3>Connect Google Sheet</h3></div><button class="icon-btn" id="sheet-close-btn" type="button" aria-label="Close">✕</button></div>
+      <p>วางลิงก์ Google Sheet ของกลุ่มคุณ เพื่อโหลด Shipments, Documents และ Events</p>
+      <label for="sheet-url">Google Sheet URL</label>
+      <input id="sheet-url" type="url" required placeholder="https://docs.google.com/spreadsheets/d/…/edit" autocomplete="off">
+      <p class="sheet-help">ใช้ชีทเวิร์กช็อปที่บัญชี Deploy เป็นเจ้าของ · Auto Sync ทุก 5 วินาที</p>
+      <p id="sheet-feedback" role="status" aria-live="polite"></p>
+      <div class="sheet-form-actions"><button id="sheet-disconnect-btn" class="secondary-btn" type="button">Disconnect</button><button id="sheet-connect-btn" class="secondary-btn" type="submit">Connect</button></div>
+    </form>
+  </dialog>
+  <script src="freight-motion.js"></script>
+  <script src="freight-sync.js"></script>
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

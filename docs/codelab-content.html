@@ -1,0 +1,45 @@
+<div class="track" data-track="overview" data-name="ภาพรวม" data-code="O">
+<section class="step" id="overview" data-title="Workshop Plan">
+<h1>AI Port &amp; Freight Assistant</h1><p>Fakduai Lab · เรียนผ่าน LINE OA + n8n + Google Sheets + Port Simulator</p>
+<p>1 วัน · 09:00–16:30 · iPad · ผู้เรียน 160 / 80 / 80 คน · 8 คน/กลุ่ม → 20 / 10 / 10 กลุ่ม</p>
+<p>Guided Workshop จาก Template เดียว ไม่ Build from Scratch</p><h2>Learn → Try → Modify → Challenge → Showcase</h2>
+<p>AI อ่านข้อมูลและสร้างคิว ส่วน Simulator แสดงการทำงานและยืนยันผลกลับชีท ไม่ใช่แค่ตอบแชทว่าเสร็จแล้ว</p>
+<p><a href="../?demo=1" target="_blank" rel="noopener">เปิด Port Simulator (Demo)</a></p>
+<table><thead><tr><th>เวลา</th><th>กิจกรรม</th></tr></thead><tbody>
+<tr><td>09:00–09:25</td><td>AI &amp; Logistics / เป้าหมาย</td></tr>
+<tr><td>09:25–10:30</td><td>LINE OA recap + Lab 1 เชื่อม Template</td></tr>
+<tr><td>10:30–10:45</td><td>พัก</td></tr>
+<tr><td>10:45–12:00</td><td>Lab 2 Prompt + Tools + Confirmation</td></tr>
+<tr><td>12:00–13:00</td><td>พักกลางวัน</td></tr>
+<tr><td>13:00–13:45</td><td>Lab 3 ข้อมูลในชีทและ Sync</td></tr>
+<tr><td>13:45–14:45</td><td>Lab 4 Import / Export</td></tr>
+<tr><td>14:45–15:00</td><td>พัก</td></tr>
+<tr><td>15:00–15:50</td><td>Group Challenge</td></tr>
+<tr><td>15:50–16:20</td><td>Showcase</td></tr>
+<tr><td>16:20–16:30</td><td>สรุปและต่อยอด</td></tr></tbody></table>
+</section></div>
+<!-- PREPARATION -->
+<div class="track" data-track="lab1" data-name="Lab 1 · LINE" data-code="L1">
+<section class="step" id="import" data-title="Import Template">
+<h1>นำเข้า Template แล้วตั้งค่าที่เดียว</h1><ol><li>ดาวน์โหลด <a href="../downloads/Fakduai-Port-LINE.json" download>LINE Workflow</a> แล้ว Import ใน n8n</li><li>Workshop Settings: ใส่ sheetId ของกลุ่ม (ส่วนระหว่าง /d/ และ /edit)</li><li>เลือก Google Sheets credential ให้ครบทั้ง 5 tools และ OpenAI credential</li></ol>
+<p>LINE Webhook → Split Events → Filter Text Messages → Workshop Settings → Freight AI Agent → Reply to LINE</p>
+<p>ทุก Lab ใช้ workflow นี้ ไม่ต้องเริ่มใหม่</p></section>
+<section class="step" id="line" data-title="เชื่อม LINE OA">
+<h1>ให้ LINE ส่งข้อความเข้า n8n</h1><ol><li>ตั้ง Webhook path ไม่ซ้ำ เช่น port-group-01</li><li>Reply to LINE: Header Auth / Authorization / Bearer ตามด้วย Channel Access Token</li><li>Publish/Activate แล้วคัดลอก Production URL จาก Webhook node</li><li>ใส่ใน LINE Developers → Verify → Use webhook</li><li>ปิดข้อความตอบกลับอัตโนมัติที่ซ้ำซ้อน เพิ่มเพื่อน OA แล้วทดสอบ</li></ol>
+<p>Verify ที่ส่ง events ว่างไม่ต้องได้คำตอบจาก AI ตรวจ execution ของข้อความจริง</p><p>อย่าส่ง Token ลง prompt, screenshot หรือ GitHub; template ยังไม่ตรวจ webhook signature ใช้ข้อมูลจำลองเท่านั้น</p></section>
+<section class="step" id="first-chat" data-title="ถามครั้งแรก"><h1>ทดสอบการอ่านข้อมูล</h1><pre>ตรวจ IMP-003 อยู่ที่ไหน สถานะอะไร และขาดเอกสารอะไร</pre><p>ดู Executions: ข้อความต้องผ่าน Filter → Agent เรียก tools → Reply to LINE ตรวจคำตอบเทียบชีท ไม่เดาจากความจำ</p><p>ไม่ตอบ? ตรวจ workflow active, webhook URL, LINE credential, Sheets credential และ model error</p></section></div>
+<div class="track" data-track="lab2" data-name="Lab 2 · AI &amp; Tools" data-code="L2">
+<section class="step" id="tools" data-title="เข้าใจ AI Agent"><h1>AI ทำอะไรได้บ้าง?</h1><table><tr><th>Tool</th><th>หน้าที่</th></tr><tr><td>Shipment Lookup</td><td>อ่านสถานะและตำแหน่ง</td></tr><tr><td>Document Lookup</td><td>ตรวจเอกสาร</td></tr><tr><td>Event Lookup</td><td>ตรวจงานค้าง/งานซ้ำ</td></tr><tr><td>Update Document</td><td>บันทึกเอกสารจำลอง</td></tr><tr><td>Create Freight Event</td><td>เพิ่มคำสั่งให้ Simulator</td></tr></table><details><summary>System Prompt ฉบับเต็ม</summary><pre>{{SYSTEM_PROMPT}}</pre></details></section>
+<section class="step" id="modify" data-title="Modify Prompt"><h1>ปรับให้เหมาะกับทีม</h1><p>เปลี่ยนบทบาท น้ำเสียง ความสั้นของคำตอบ และอธิบายขั้นตอนถัดไป ใช้ข้อความธรรมดาใน LINE</p><p>ห้ามลบกฎตรวจข้อมูลสด การยืนยัน การป้องกันคิวซ้ำ และเอกสารที่ต้องพร้อม</p><pre>ตอบเป็นผู้ช่วยฝ่ายนำเข้า–ส่งออก ให้บอกสถานะ เอกสารที่ขาด และขั้นตอนถัดไปใน 3–5 บรรทัด</pre><p>เปรียบเทียบก่อน/หลังด้วยคำถามเดียวกัน ข้อมูลต้องยังตรงชีท</p></section>
+<section class="step" id="confirm" data-title="Confirmation"><h1>การเขียนต้องยืนยัน</h1><p>ขอเปลี่ยนเอกสาร → bot สรุปเป้าหมาย → ยืนยัน → tool เขียน → อ่านตรวจผล</p><p>ลองตอบ “ยกเลิก” ต้องไม่มีการเปลี่ยนข้อมูล ลองสั่งซ้ำขณะมีคิวต้องไม่เพิ่มซ้ำ</p><p>Memory แยกตาม Sheet + ผู้ใช้/ห้อง LINE ไม่ใช่ใช้ session ร่วมทั้งห้องเรียน</p></section></div>
+<div class="track" data-track="lab3" data-name="Lab 3 · Data &amp; Sync" data-code="L3">
+<section class="step" id="data" data-title="ข้อมูลสามตาราง"><h1>แยกข้อมูลกับคำสั่ง</h1><p>Shipments = สถานะล่าสุด / Documents = เอกสาร / Events = คิวจำลอง</p><p>AI เขียน Documents และ Events ผ่าน Google Sheets tools; Simulator ส่งผลจบผ่าน Apps Script</p><p>ห้ามเปลี่ยนชื่อ tabs/headers หรือแปล status ในชีทตามภาษา UI</p><p><a href="../downloads/DATA-SCHEMA.md">อ่านโครงสร้างข้อมูล</a></p></section>
+<section class="step" id="sync" data-title="เชื่อมชีทกลุ่ม"><h1>ชีทเดียวกันทั้ง LINE และเว็บ</h1><ol><li>เปิด Settings บน Simulator ใส่ Sheet URL ของกลุ่ม</li><li>Connect → Refresh → Start Auto Sync</li><li>เช็กว่า Sheet ID ตรง Workshop Settings</li><li>แก้ข้อมูลจำลองหนึ่งช่อง กด Refresh แล้วถาม LINE อีกครั้ง</li></ol><p>สิทธิ์ edit link อย่างเดียวไม่พอ: ชีทต้องอยู่ในเจ้าของบัญชี workshop ที่ Apps Script deployment รองรับ เปิดตัวประมวลผลเพียงหนึ่งเว็บต่อชีท</p></section></div>
+<div class="track" data-track="lab4" data-name="Lab 4 · Simulation" data-code="L4">
+<section class="step" id="import-flow" data-title="Import"><h1>ปล่อยตู้ IMP-003</h1><ol><li>อ่านสถานะและเอกสารขาด</li><li>บันทึก Certificate of Origin เป็น RECEIVED → ยืนยัน</li><li>บันทึก Import Declaration เป็น APPROVED → ยืนยัน</li><li>ปล่อยตู้ IMP-003 → ยืนยัน</li><li>รอ AGV + รถออก Terminal ตรวจ DELIVERED และ Event COMPLETED</li></ol><p>การอนุมัติเป็นเพียงข้อมูลจำลอง ไม่มีผลทางศุลกากรจริง งานใหม่จบใน CUSTOMS_RELEASE ไม่เพิ่ม GATE_OUT ซ้ำหลังจบ</p></section>
+<section class="step" id="export-flow" data-title="Export"><h1>ส่ง EXP-004 ถึงปลายทาง</h1><ol><li>บันทึก Packing List เป็น RECEIVED → ยืนยัน</li><li>รอการย้ายเข้าลานจน READY_TO_LOAD (ขอย้ายเข้าลานถ้ายังไม่มีคิว)</li><li>บันทึก Export Declaration เป็น APPROVED → ยืนยัน</li><li>โหลดขึ้นเรือ → ยืนยัน → รอ LOADED</li><li>ออกเดินทาง → ยืนยัน → รอ IN_TRANSIT</li><li>จำลองถึงปลายทาง → ยืนยัน → รอ ARRIVED</li></ol><p>EXPORT_DEPARTURE ไม่ใช่ถึงปลายทาง ต้องมี EXPORT_ARRIVAL ห้ามสั่งขั้นถัดไปก่อนผลก่อนหน้าจบ</p></section>
+<section class="step" id="queue" data-title="อ่านสถานะคิว"><h1>คิวไม่เดินต้องดูอะไร?</h1><table><tr><th>สถานะ</th><th>ความหมาย</th></tr><tr><td>PENDING</td><td>รอเว็บประมวลผล</td></tr><tr><td>WAITING_DOCUMENT</td><td>รอเอกสาร เมื่อครบให้เว็บ sync ตรวจใหม่</td></tr><tr><td>PROCESSING</td><td>กำลังจำลอง ยังไม่จบ</td></tr><tr><td>COMPLETED</td><td>ยืนยันจบ ตรวจ Shipment ประกอบ</td></tr><tr><td>Reconnecting</td><td>กำลัง retry อย่าสั่งซ้ำ</td></tr><tr><td>Check Sheet</td><td>ตรวจสิทธิ์/ID/deployment แล้ว Refresh</td></tr></table><p>ห้ามบังคับ Event เป็น COMPLETED เอง เพราะภาพจำลองและ Shipment อาจไม่ตรงกัน</p></section></div>
+<div class="track" data-track="challenge" data-name="Challenge" data-code="C">
+<section class="step" id="challenge" data-title="โจทย์กลุ่ม"><h1>แก้ปัญหาหนึ่ง Shipment ให้จบ</h1><p>เลือก Import หรือ Export ที่ติดเอกสาร แสดงการถามข้อมูล อัปเดตแบบยืนยัน จำลองจนจบ และสั่งซ้ำโดยไม่เกิดคิวใหม่</p><p>8 คนแบ่ง 4 คู่: AI/Prompt · n8n · Data · Tester/Logistics หมุนบทบาทให้ทุกคนได้ลงมือ</p><h2>Showcase 2 นาที</h2><p>ปัญหา → Prompt ที่ปรับ → หลักฐานจากชีทและ Simulator → สิ่งที่เรียนรู้ รอบ 80 คนให้ครบ 10 กลุ่ม; รอบ 160 คนเลือก 6–8 กลุ่ม</p></section></div>
+<div class="track" data-track="resources" data-name="Downloads" data-code="D">
+<section class="step" id="downloads" data-title="ไฟล์และ Checklist"><h1>ไฟล์สำหรับทีม</h1><ul><li><a href="../downloads/Fakduai-Port-LINE.json" download>LINE Template</a></li><li><a href="../downloads/Code.gs" download>Apps Script</a></li><li><a href="../downloads/Freight-System-Prompt.txt" download>System Prompt</a></li><li><a href="../downloads/SETUP.md">ตั้งค่า</a></li><li><a href="../downloads/TEST-PROMPTS.md">คำสั่งทดสอบ</a></li></ul><h2>Checklist ผู้จัด</h2><ul><li>ชีทและ OA 20 / 10 / 10 ชุดพร้อมก่อนวันเรียน</li><li>n8n credentials + model credit + HTTPS พร้อม</li><li>Apps Script deployment / owner / schema ทดสอบแล้ว</li><li>ทดสอบ Import/Export จบจริง และคิวซ้ำ</li><li>iPad / Wi-Fi / จอ / QR code และทีม support</li><li>ใช้ข้อมูลจำลอง ไม่มี token ในเอกสารสาธารณะ</li></ul></section></div>

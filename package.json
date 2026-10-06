@@ -1,0 +1,10 @@
+{
+  "name": "fakduai-port-simulator",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build-workshop.mjs",
+    "test": "node --test tests/*.test.cjs",
+    "serve": "python3 -m http.server 4174 --directory public"
+  }
+}

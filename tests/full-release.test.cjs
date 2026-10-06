@@ -1,0 +1,22 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const {releaseStageAt} = require('../public/freight-motion.js');
+assert.equal(releaseStageAt(0).phase, 'agv');
+assert.equal(releaseStageAt(.47).phase, 'agv');
+assert.equal(releaseStageAt(.48).phase, 'handover');
+assert.equal(releaseStageAt(.65).phase, 'handover');
+assert.equal(releaseStageAt(.66).phase, 'truck');
+assert.equal(releaseStageAt(.94).phase, 'truck');
+assert.equal(releaseStageAt(.95).phase, 'done');
+assert.equal(releaseStageAt(1).phase, 'done');
+for(let i=0;i<=100;i++) {const stage=releaseStageAt(i/100);assert.ok(stage.progress>=0&&stage.progress<=1);}
+const workflow=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../n8n/Fakduai-Freight-Full-Release.json'),'utf8'));
+const create=workflow.nodes.find(n=>n.name==='Create Freight Event');
+assert.match(create.parameters.columns.value.Animation, /"CUSTOMS_RELEASE":"AGV_AND_TRUCK_GATE_OUT"/);
+assert.match(create.parameters.columns.value.Location, /"CUSTOMS_RELEASE":"Outside Terminal"/);
+assert.match(create.parameters.columns.value.Animation, /"GATE_OUT":"TRUCK_GATE_OUT"/, 'Legacy staging-only shipments can finish without replaying Customs release');
+const prompt=workflow.nodes.find(n=>n.name==='Freight AI Agent').parameters.options.systemMessage;
+assert.match(prompt,/DELIVERED/);assert.match(prompt,/AGV_AND_TRUCK_GATE_OUT/);
+assert.doesNotMatch(prompt,/ห้ามเรียกสถานะนี้ว่า DELIVERED/);
+console.log('Full-release checks passed: AGV, handover, truck, completion, tool mapping and legacy fallback.');
