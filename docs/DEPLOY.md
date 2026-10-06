@@ -9,10 +9,10 @@ GitHub Actions ทดสอบ + build ก่อน deploy public/ ไปโป�
    - CLOUDFLARE_ACCOUNT_ID
    - CLOUDFLARE_API_TOKEN (Account / Cloudflare Pages / Edit)
 2. Actions → Deploy Pages → Run workflow เลือก branch main
-3. ถ้ายังไม่มี Pages project ให้ติ๊ก Create Pages project first แล้ว Run workflow: Action จะสร้าง fakduai-port-simulator และ deploy ต่อในรอบเดียว
-4. เมื่อมี project แล้ว ไม่ต้องติ๊กตัวเลือกนี้อีก; push main จะ deploy ตามปกติ
+3. Action ตรวจโปรเจกต์ผ่าน Cloudflare API ถ้าไม่มีจะสร้าง fakduai-port-simulator แล้ว deploy ต่อในรอบเดียว ไม่ต้องติ๊กตัวเลือก
+4. เมื่อมี project แล้ว ขั้นสร้างจะถูกข้าม; push main จะตรวจและ deploy ตามปกติ
 
 เมื่อไม่มี secrets workflow จะทดสอบ/build แต่ข้าม deploy พร้อม notice ไม่ได้หมายความว่าเว็บขึ้นแล้ว
-การสร้าง project ทำเฉพาะ manual run ที่ติ๊ก create_project เท่านั้น ไม่สร้างซ้ำบน push
-ถ้าติ๊กทั้งที่ project มีอยู่แล้ว ขั้นตอนสร้างจะ fail; ให้ Run workflow ใหม่โดยไม่ติ๊ก (อย่า Re-run รอบที่ใช้ตัวเลือกเดิม)
+การสร้างทำเฉพาะเมื่อ API ยืนยัน Project Not Found (8000007) ไม่ถือ token/permission/network errors ว่าโปรเจกต์ไม่มี
+หลังอัปเดต Action ให้ใช้รอบ push ล่าสุดหรือ Run workflow ใหม่ ไม่ Re-run รอบเก่าที่ใช้โค้ดเดิม
 อย่าใส่ token ในไฟล์ repository
