@@ -457,7 +457,7 @@ kbd{font-family:var(--font-mono);font-size:12px;padding:0 5px;border:1px solid v
   <h3>เริ่มจากตรงไหน</h3>
   <div class="grid">
     <div><strong>1 · เตรียมความพร้อม</strong>สร้าง LINE OA และเปิด Messaging API ทำก่อนวันอบรม หรือในช่วง LINE OA for Logistics<div class="copyline"><button class="btn primary" data-go="prep">เริ่มเตรียม LINE OA →</button></div></div>
-    <div><strong>2 · Lab 1</strong>เชื่อม LINE OA เข้ากับ Freight workflow ใช้บัญชี n8n, Webhook path และ Google Sheet ของกลุ่มที่ทีมงานแจก<div class="copyline"><button class="btn" data-go="lab1">ไป Lab 1 →</button></div></div>
+    <div><strong>2 · Lab 1</strong>เชื่อม LINE OA เข้ากับ Freight workflow ใช้บัญชี n8n และ Google Sheet ของกลุ่มที่ทีมงานแจก และ Webhook path ที่ต่อท้ายด้วยเลขกลุ่ม เช่น <code>port-line-webhook-G01</code><div class="copyline"><button class="btn" data-go="lab1">ไป Lab 1 →</button></div></div>
   </div>
   <div class="note"><b>วิธีดูภาพ</b> กรอบสีส้มในภาพหน้าจอคือปุ่มหรือช่องที่ต้องกดหรือดู คลิกภาพเพื่อเปิดขนาดเต็ม ภาพทั้งหมดถ่ายจากระบบจริงเมื่อ 6 ต.ค. 2026 ข้อมูลทั้งหมดเป็นข้อมูลจำลอง</div>
 </section>
@@ -572,7 +572,7 @@ kbd{font-family:var(--font-mono);font-size:12px;padding:0 5px;border:1px solid v
   <div class="grid">
     <div><strong>LINE OA จากโซน P</strong>ที่เปิดใช้ Messaging API แล้ว</div>
     <div><strong>บัญชี n8n</strong>ที่ทีมงานแจก ล็อกอิน <code>n8n.fakduai.com</code> ได้ และมี workflow <b>2_Fakduai Lab - Freight AI Assistant</b> รออยู่</div>
-    <div><strong>Webhook path และ Google Sheet ของกลุ่ม</strong>ทีมงานแจก path ที่ไม่ซ้ำกับกลุ่มอื่น (เช่น <code>port-group-01</code>) และลิงก์ชีทของกลุ่ม</div>
+    <div><strong>เลขกลุ่มและ Google Sheet ของกลุ่ม</strong>เลขกลุ่ม เช่น <code>G01</code> ใช้ต่อท้าย Webhook path เป็น <code>port-line-webhook-G01</code> และลิงก์ชีทของกลุ่มที่ทีมงานแจก</div>
   </div>
 </section>
 
@@ -580,11 +580,11 @@ kbd{font-family:var(--font-mono);font-size:12px;padding:0 5px;border:1px solid v
 <section class="step" id="lab1-2" data-title="ใส่ Webhook URL และออก token" data-code="L1-02">
   <div class="step-head"><span class="code-badge">L1-02</span><span class="chip line">LINE</span><span class="chip time">4 นาที</span></div>
   <h2>ใส่ Webhook URL และออก token</h2>
-  <p>ทั้งสองอย่างอยู่ในหน้าเดียวกันของ LINE Developers ใส่ Webhook URL ได้เลยโดยไม่ต้องรอ n8n เพราะ path ของ workflow กำหนดไว้แล้ว</p>
-  <h3>Webhook URL ของคุณ</h3>
-  <p>ใส่ path ที่ทีมงานแจก (ค่าเริ่มต้นของ Port คือ <code>port-line-webhook</code>) แล้วกดคัดลอก URL นี้ไว้ใช้ในข้อ 6</p>
-  <div class="copyline"><span style="align-self:center;font-family:var(--font-mono);font-size:13.5px;color:var(--muted)">https://n8n.fakduai.com/webhook/</span><input class="val" id="whPath" value="port-line-webhook" aria-label="Webhook path" style="flex:0 1 220px;font:inherit;font-family:var(--font-mono);font-size:13.5px;color:var(--ink)"></div>
-  <div class="copyline"><div class="val" id="whFull">https://n8n.fakduai.com/webhook/port-line-webhook</div><button class="btn" id="copyWh">คัดลอก</button></div>
+  <p>ทั้งสองอย่างอยู่ในหน้าเดียวกันของ LINE Developers ใส่ Webhook URL ได้เลยโดยไม่ต้องรอ n8n เพราะ path ของแต่ละกลุ่มกำหนดรูปแบบไว้แล้ว (ต่อท้ายด้วยเลขกลุ่ม)</p>
+  <h3>Webhook URL ของกลุ่มคุณ</h3>
+  <p>ทุกกลุ่มต้อง<b>ต่อท้าย path ด้วยเลขกลุ่มของตัวเอง</b> เช่นกลุ่ม 1 ใช้ <code>port-line-webhook-G01</code> ถ้าใช้ path เดียวกับกลุ่มอื่น Webhook จะใช้ไม่ได้ พิมพ์เลขกลุ่มด้านล่าง แล้วกดคัดลอก URL นี้ไว้ใช้ในข้อ 6</p>
+  <div class="copyline"><span style="align-self:center;font-family:var(--font-mono);font-size:13.5px;color:var(--muted)">https://n8n.fakduai.com/webhook/port-line-webhook-</span><input class="val" id="whPath" placeholder="G01" aria-label="เลขกลุ่ม เช่น G01" autocomplete="off" style="flex:0 1 120px;font:inherit;font-family:var(--font-mono);font-size:13.5px;color:var(--ink);text-transform:uppercase"></div>
+  <div class="copyline"><div class="val" id="whFull" style="color:var(--muted)">พิมพ์เลขกลุ่มก่อน เช่น G01</div><button class="btn" id="copyWh" disabled>คัดลอก</button></div>
 
   <ol class="do">
     <li><div>เปิด LINE Developers Console ถ้าล็อกอิน LINE ไว้แล้วจะเข้าได้ทันที (ถ้าเข้าครั้งแรก ระบบจะให้กรอก Developer name กับ Email ก่อน)
@@ -713,7 +713,7 @@ kbd{font-family:var(--font-mono);font-size:12px;padding:0 5px;border:1px solid v
   <div class="step-head"><span class="code-badge">L1-05</span><span class="chip n8n">n8n</span><span class="chip time">2 นาที</span></div>
   <h2>Publish workflow</h2>
   <ol class="do">
-    <li><div>เช็กว่า node <b>LINE Webhook</b> ใช้ path ของกลุ่ม (ค่าเริ่มต้นคือ <code>port-line-webhook</code>) ต้องตรงกับ URL ที่ใส่ใน LINE Developers ตอนขั้น L1-02</div></li>
+    <li><div>ดับเบิลคลิก node <b>LINE Webhook</b> ช่อง <b>Path</b> ต้องต่อท้ายด้วยเลขกลุ่มของคุณ เช่น <code>port-line-webhook-G01</code> ให้ตรงกับ URL ที่ใส่ใน LINE Developers ตอนขั้น L1-02 ถ้ายังเป็น <code>port-line-webhook</code> ให้เติม <code>-G01</code> (เลขกลุ่มของคุณ)</div></li>
     <li><div>เช็กว่าไม่มี node ไหนมีไอคอนเตือนสีแดงแล้ว จากนั้นกด <b>Publish</b> ที่มุมขวาบน ใช้ชื่อเวอร์ชันที่ตั้งมาให้ แล้วกด <b>Publish</b> อีกครั้ง
       <figure class="shot"><a href="img/08a-publish-dialog.jpg" target="_blank" rel="noopener"><img src="img/08a-publish-dialog.jpg" alt="หน้าต่าง Publish workflow" loading="lazy"></a><figcaption>ภาพจาก Lab Warehouse ขั้นตอน Publish เหมือนกันทุก workflow</figcaption></figure>
     </div></li>
@@ -721,7 +721,7 @@ kbd{font-family:var(--font-mono);font-size:12px;padding:0 5px;border:1px solid v
       <figure class="shot"><a href="img/08b-published.jpg" target="_blank" rel="noopener"><img src="img/08b-published.jpg" alt="workflow สถานะ Published" loading="lazy"></a></figure>
     </div></li>
   </ol>
-  <div class="note warn"><b>path ซ้ำไม่ได้</b> n8n เปิดใช้ Webhook path เดียวกันได้ทีละ workflow ถ้า Warehouse ใช้ <code>line-webhook</code> อยู่ Port ต้องใช้ path อื่น เช่น <code>port-line-webhook</code></div>
+  <div class="note warn"><b>path ซ้ำไม่ได้</b> n8n เปิดใช้ Webhook path เดียวกันได้ทีละ workflow ทุกกลุ่มจึงต้องมีเลขกลุ่มต่อท้าย เช่น <code>port-line-webhook-G01</code>, <code>port-line-webhook-G02</code> และต้องไม่ซ้ำกับ path ของ Warehouse (<code>line-webhook-G01</code>)</div>
 </section>
 
 <section class="step" id="lab1-6" data-title="Verify และถามข้อมูลครั้งแรก" data-code="L1-06">
@@ -764,7 +764,7 @@ kbd{font-family:var(--font-mono);font-size:12px;padding:0 5px;border:1px solid v
   <div class="tbl"><table>
     <thead><tr><th>อาการ</th><th>สาเหตุที่เป็นไปได้</th><th>วิธีแก้</th></tr></thead>
     <tbody>
-      <tr><td>Verify ไม่ผ่าน (404)</td><td>workflow ยังไม่ Publish หรือ path ไม่ตรง</td><td>Publish ตามขั้น L1-05 แล้วเทียบ path</td></tr>
+      <tr><td>Verify ไม่ผ่าน (404)</td><td>workflow ยังไม่ Publish หรือ path ไม่ตรง (ลืมเลขกลุ่ม เช่น -G01)</td><td>Publish ตามขั้น L1-05 แล้วเทียบ path</td></tr>
       <tr><td>บอทเงียบ ไม่มีแถวใหม่ใน Executions</td><td>ยังไม่เปิด Use webhook</td><td>เปิดสวิตช์ตามขั้น L1-02</td></tr>
       <tr><td>Reply to LINE ขึ้น 401</td><td>token ผิด หรือลืมคำว่า <code>Bearer </code></td><td>แก้ credential ตามขั้น L1-04</td></tr>
       <tr><td>Tool ขึ้น <code>Requested entity was not found</code></td><td>sheetId ผิด หรือ credential เปิดไฟล์ไม่ได้</td><td>คัดลอก Sheet ID ใหม่ตามขั้น L1-04</td></tr>
@@ -1072,7 +1072,7 @@ kbd{font-family:var(--font-mono);font-size:12px;padding:0 5px;border:1px solid v
           <tr><td>Tool ทั้ง 5 ตัว</td><td>เลือก Google Sheets Credential ที่เปิดไฟล์ได้ ช่อง Document ไม่ต้องแก้</td></tr>
           <tr><td>OpenAI Chat Model</td><td>เลือก OpenAI Credential และเปิด Use Responses API</td></tr>
           <tr><td>Reply to LINE</td><td>Header Auth <code>Authorization</code> / <code>Bearer &lt;Channel access token&gt;</code></td></tr>
-          <tr><td>LINE Webhook</td><td>ตั้ง path ของตัวเอง แล้วนำ Production URL ไปใส่ใน LINE Developers</td></tr>
+          <tr><td>LINE Webhook</td><td>ตั้ง path ของตัวเองที่ไม่ซ้ำ (ในห้องใช้ <code>port-line-webhook-G01</code>) แล้วนำ Production URL ไปใส่ใน LINE Developers</td></tr>
         </tbody>
       </table></div></div></li>
     <li><div>กด <b>Publish</b> แล้วทดสอบตาม Lab 4</div></li>
@@ -1332,9 +1332,14 @@ kbd{font-family:var(--font-mono);font-size:12px;padding:0 5px;border:1px solid v
   document.querySelectorAll('[data-copy-from]').forEach(b=>b.addEventListener('click',()=>{const el=document.getElementById(b.dataset.copyFrom);if(el)copyText(el.textContent,b)}));
   const cs=document.getElementById('copySys');if(cs)cs.addEventListener('click',e=>copyText(document.getElementById('sysmsgFull').textContent,e.currentTarget));
   const whPath=document.getElementById('whPath'),whFull=document.getElementById('whFull');
-  const whUrl=()=>'https://n8n.fakduai.com/webhook/'+(whPath.value.trim().replace(/^\/+/,'')||'port-line-webhook');
-  whPath.addEventListener('input',()=>{whFull.textContent=whUrl()});
-  document.getElementById('copyWh').addEventListener('click',e=>copyText(whUrl(),e.currentTarget));
+  const whGroup=()=>{const v=whPath.value.trim().toUpperCase().replace(/\s+/g,'');const m=v.match(/^G?(\d{1,3})$/);return m?'G'+m[1].padStart(2,'0'):null};
+  const whUrl=()=>'https://n8n.fakduai.com/webhook/port-line-webhook-'+whGroup();
+  const whBtn=document.getElementById('copyWh');
+  const whUpd=()=>{const g=whGroup();if(g){whFull.textContent=whUrl();whFull.style.color='var(--ink)';whBtn.disabled=false;try{localStorage.setItem('codelab-group',g)}catch(e){}}else{whFull.textContent=whPath.value.trim()?'รูปแบบเลขกลุ่มคือ G ตามด้วยตัวเลข เช่น G01':'พิมพ์เลขกลุ่มก่อน เช่น G01';whFull.style.color='var(--muted)';whBtn.disabled=true}};
+  whPath.addEventListener('input',whUpd);
+  try{const g=localStorage.getItem('codelab-group');if(g){whPath.value=g;}}catch(e){}
+  whUpd();
+  whBtn.addEventListener('click',e=>{if(whGroup())copyText(whUrl(),e.currentTarget)});
 
   const cst=document.getElementById('copyStarter');
   if(cst)cst.addEventListener('click',e=>copyText(JSON.stringify(JSON.parse(document.getElementById('starterWf').textContent),null,2),e.currentTarget));

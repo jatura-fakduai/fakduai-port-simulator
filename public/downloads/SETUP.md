@@ -14,7 +14,7 @@
 1. Import n8n/Fakduai-Freight-Full-Release.json
 2. Workshop Settings: ใส่ sheetId ที่เดียว (ส่วนระหว่าง /d/ และ /edit ใน URL)
 3. เลือก Google Sheets credentials ให้ครบทั้ง 5 tools และเลือก OpenAI credential
-4. LINE Webhook: เปลี่ยน path ให้ไม่ซ้ำกับกลุ่มอื่น เช่น port-group-01
+4. LINE Webhook: เปลี่ยน path ให้ไม่ซ้ำกับกลุ่มอื่น เช่น port-line-webhook-G01 (ต่อท้ายด้วยเลขกลุ่ม)
 5. Reply to LINE: สร้าง Header Auth ชื่อ header Authorization ค่า Bearer ตามด้วย Channel Access Token
 6. Publish/Activate workflow แล้วคัดลอก Production URL จาก LINE Webhook
 7. LINE Developers: ใส่ Webhook URL, Verify และเปิด Use webhook; ปิดข้อความตอบกลับอัตโนมัติที่ซ้ำซ้อน
