@@ -35,4 +35,6 @@ Template ไม่มีการตรวจ LINE webhook signature หรื�
 Workflow ลบ credential references แล้ว ผู้ใช้ต้องเลือก credentials ใน n8n เอง
 Simulator มีค่าเริ่มต้น Apps Script ของ workshop; ผู้จัดต้องเปลี่ยน endpoint เป็น deployment ของตนก่อนใช้กับข้อมูลอื่น
 Apps Script ตรวจ schema และเจ้าของชีท ไม่ได้ใช้ allowlist รายไฟล์: ใช้บัญชี workshop แยกจากข้อมูลธุรกิจ
+รองรับชีทของบัญชีที่ Deploy และอีเมลใน `CONFIG.ALLOWED_OWNER_EMAILS` ซึ่งเพิ่ม `louiszzico@gmail.com` แล้ว
+เจ้าของที่เพิ่มต้องแชร์แต่ละชีทให้บัญชีที่ Deploy เป็น **Editor** แล้วอัปเดต Apps Script ระบบกลางผ่าน **Deploy → Manage deployments → แก้ไข → New version → Deploy** ครั้งเดียว ใช้ URL เดิมและไฟล์สำเนาหลายไฟล์ได้
 ต้องเปิดหน้า Simulator และ Auto Sync เพื่อประมวลผลคิว; เปิดตัวประมวลผลเพียงหนึ่งหน้าต่อชีท

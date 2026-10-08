@@ -4,7 +4,7 @@
 
 - Google Sheet แยกกลุ่มละ 1 ไฟล์: อัปโหลด docs/Google-Sheet-Template.xlsx แล้วแปลงเป็น Google Sheets (File → Save as Google Sheets) จากนั้น Make a copy แยกกลุ่ม คง Shipments, Documents, Events และคอลัมน์ทั้งหมด
 - ติดตั้ง google-apps-script/Code.gs ในชีทกลางของบัญชี workshop; authorize และ deploy Web App ตามระบบเดิม
-- ชีทกลุ่มต้องอยู่ในบัญชีเจ้าของ deployment ที่ API อนุญาตให้ใช้; shared edit link อย่างเดียวไม่พอ
+- ชีทกลุ่มต้องเป็นของบัญชีที่ Deploy หรืออีเมลใน `CONFIG.ALLOWED_OWNER_EMAILS` (โค้ดเพิ่ม `louiszzico@gmail.com` แล้ว); เจ้าของที่เพิ่มต้องแชร์แต่ละไฟล์ให้บัญชีที่ Deploy เป็น **Editor** ด้วย
 - เปลี่ยน SHEET_API_URL ใน public/app.js หากสร้าง deployment ใหม่
 - แต่ละกลุ่มเตรียม LINE OA + Messaging API ไว้ก่อนวันเรียน ในห้องรีแคป ไม่สมัครใหม่
 - n8n มี HTTPS URL, Google Sheets credential และ OpenAI credential พร้อมใช้งาน

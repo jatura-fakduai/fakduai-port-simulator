@@ -1,7 +1,8 @@
 const CONFIG = Object.freeze({
   spreadsheetId: '1ivkb_0aKUvLsaBgKaeEaRwURQbxG-cxBL0J0krG5PFE',
-  // Any compatible workshop sheet OWNED by the deployment account is supported.
-  // Sharing a sheet with that account is not sufficient; no per-file allowlist.
+  // Allow the deployer's Sheets and Sheets owned by these additional accounts.
+  // Additional owners must share each Sheet with the deployer as an Editor.
+  ALLOWED_OWNER_EMAILS: Object.freeze(['louiszzico@gmail.com']),
   sheets: Object.freeze({
     shipments: 'Shipments',
     documents: 'Documents',
@@ -295,7 +296,7 @@ function findEvent_(spreadsheet, eventId) {
   return { sheet: sheet, row: index + 1, values: values[index], statusColumn: statusColumn, processedColumn: processedColumn, status: String(values[index][statusColumn]).trim().toUpperCase() };
 }
 
-// Fail closed: never allow missing identity, shared-drive ownership or another owner.
+// Fail closed: reject missing identity, shared-drive ownership and unlisted owners.
 // Apply the same check to reads and writes, not only event acknowledgements.
 function openAuthorizedSpreadsheet_(sheetId) {
   const id = String(sheetId || '').trim();
@@ -310,8 +311,9 @@ function openAuthorizedSpreadsheet_(sheetId) {
   if (!ownerEmail || !effectiveEmail) {
     throw new Error('ตรวจสอบเจ้าของชีทไม่ได้ ใช้ชีทใน My Drive และ Deploy แบบ Execute as Me');
   }
-  if (ownerEmail !== effectiveEmail) {
-    throw new Error('ชีทนี้ต้องเป็นของบัญชีที่ Deploy ระบบกลาง ให้บัญชีนั้น Make a copy แล้วใช้ลิงก์สำเนา');
+  const allowedOwners = CONFIG.ALLOWED_OWNER_EMAILS.map(email => String(email).trim().toLowerCase());
+  if (ownerEmail !== effectiveEmail && !allowedOwners.includes(ownerEmail)) {
+    throw new Error('อีเมลเจ้าของชีทยังไม่ได้รับอนุญาต ให้เพิ่มใน ALLOWED_OWNER_EMAILS และแชร์ชีทให้บัญชีที่ Deploy เป็น Editor');
   }
   const spreadsheet = SpreadsheetApp.openById(id);
   validateWorkshopStructure_(spreadsheet);
